@@ -605,11 +605,6 @@ export class DirectLine implements IBotConnection {
 
             ws.onopen = open => {
                 konsole.log("WebSocket open", open);
-                // Chrome is pretty bad at noticing when a WebSocket connection is broken.
-                // If we periodically ping the server with empty messages, it helps Chrome
-                // realize when connection breaks, and close the socket. We then throw an
-                // error, and that give us the opportunity to attempt to reconnect.
-                sub = Observable.interval(timeout).subscribe(_ => ws.send(null));
             }
 
             ws.onclose = close => {

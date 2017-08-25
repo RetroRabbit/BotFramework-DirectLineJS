@@ -353,7 +353,14 @@ var DirectLine = (function () {
                 // If we periodically ping the server with empty messages, it helps Chrome
                 // realize when connection breaks, and close the socket. We then throw an
                 // error, and that give us the opportunity to attempt to reconnect.
-                sub = Observable_1.Observable.interval(timeout).subscribe(function (_) { return ws.send(null); });
+                sub = Observable_1.Observable.interval(timeout).subscribe(function (_) {
+                    try {
+                        ws.send(null);
+                    }
+                    catch (e) {
+                        console.log('BotframeworkDirectline_Websocket', 'Botframework Directline web socket timed out and threw an error:' + e);
+                    }
+                });
             };
             ws.onclose = function (close) {
                 konsole.log("WebSocket close", close);

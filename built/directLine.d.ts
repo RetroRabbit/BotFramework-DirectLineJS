@@ -273,7 +273,6 @@ export declare class DirectLine implements IBotConnection {
     private pollingGetActivity$();
     private observableFromActivityGroup(activityGroup);
     private webSocketActivity$();
-    private isMobileOS();
     private observableWebSocket<T>();
     private reconnectToConversation();
 }

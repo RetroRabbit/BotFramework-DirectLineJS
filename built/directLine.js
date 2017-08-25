@@ -338,21 +338,6 @@ var DirectLine = (function () {
         })
             .flatMap(function (activityGroup) { return _this.observableFromActivityGroup(activityGroup); });
     };
-    DirectLine.prototype.isMobileOS = function () {
-        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-        // Windows Phone must come first because its UA also contains "Android"
-        if (/windows phone/i.test(userAgent)) {
-            return true;
-        }
-        if (/android/i.test(userAgent)) {
-            return true;
-        }
-        // iOS detection from: http://stackoverflow.com/a/9039885/177710
-        if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-            return true;
-        }
-        return false;
-    };
     // Originally we used Observable.webSocket, but it's fairly opionated  and I ended up writing
     // a lot of code to work around their implemention details. Since WebChat is meant to be a reference
     // implementation, I decided roll the below, where the logic is more purposeful. - @billba
@@ -362,16 +347,14 @@ var DirectLine = (function () {
             konsole.log("creating WebSocket", _this.streamUrl);
             var ws = new WebSocket(_this.streamUrl);
             var sub;
-            if (!isMobileOS()) {
-                ws.onopen = function (open) {
-                    konsole.log("WebSocket open", open);
-                    // Chrome is pretty bad at noticing when a WebSocket connection is broken.
-                    // If we periodically ping the server with empty messages, it helps Chrome
-                    // realize when connection breaks, and close the socket. We then throw an
-                    // error, and that give us the opportunity to attempt to reconnect.
-                    sub = Observable_1.Observable.interval(timeout).subscribe(function (_) { return ws.send(null); });
-                };
-            }
+            ws.onopen = function (open) {
+                konsole.log("WebSocket open", open);
+                // Chrome is pretty bad at noticing when a WebSocket connection is broken.
+                // If we periodically ping the server with empty messages, it helps Chrome
+                // realize when connection breaks, and close the socket. We then throw an
+                // error, and that give us the opportunity to attempt to reconnect.
+                sub = Observable_1.Observable.interval(timeout).subscribe(function (_) { return ws.send(null); });
+            };
             ws.onclose = function (close) {
                 konsole.log("WebSocket close", close);
                 if (sub)

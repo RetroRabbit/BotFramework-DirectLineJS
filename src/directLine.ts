@@ -605,6 +605,7 @@ export class DirectLine implements IBotConnection {
 
             ws.onopen = open => {
                 konsole.log("WebSocket open", open);
+                //TODO: Added a temporary fix for this, but we're going to have to check this issue of websocket out ASAP.
             }
 
             ws.onclose = close => {
